@@ -20,9 +20,7 @@ fun beveragesTries() {
 
 class TreeNode<T>(val value: T) {
 
-    var isEnd: Boolean = false
-
-    private val children: MutableList<TreeNode<T>> = mutableListOf()
+    val children: MutableList<TreeNode<T>> = mutableListOf()
 
     fun add(child: TreeNode<T>) = children.add(child)
 
@@ -31,6 +29,10 @@ class TreeNode<T>(val value: T) {
         children.forEach {
             it.forEachDepthFirst(visit)
         }
+    }
+
+    override fun toString(): String {
+        return "value=$value)"
     }
 
 }
