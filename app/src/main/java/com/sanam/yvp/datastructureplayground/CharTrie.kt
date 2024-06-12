@@ -29,6 +29,12 @@ fun testTrieTraversal() {
     dictionary.postOrderTraverse()
 }
 
+fun testTrieRemove() {
+    val dictionary = CharTrieByHashtable()
+    dictionary.insert("care")
+    dictionary.remove("care")
+}
+
 //This solution is not optimized because by creating each Node we allocate an array with 26 size.
 // so it is not space optimized
 class CharTrie {
@@ -60,6 +66,10 @@ class CharTrieByHashtable {
     private class Node(val value: Char) {
         val children = HashMap<Char, Node>()
         var isEndOfTheWord = false
+
+        override fun toString(): String {
+            return "value $value"
+        }
     }
 
     fun insert(word: String) {
@@ -111,6 +121,21 @@ class CharTrieByHashtable {
         }
         println(root.value)
         return root
+    }
+
+    fun remove(word: String) {
+        remove(root, word.lowercase(Locale.getDefault()), 0)
+    }
+
+    private fun remove(root: Node, word: String, index: Int) {
+        if (index == word.length){
+            println(root.value)
+            return
+        }
+        val char = word[index]
+        val child = root.children[char] ?: return
+        remove(child, word, index + 1)
+        println(root.value)
     }
 }
 
