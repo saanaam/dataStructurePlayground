@@ -1,5 +1,8 @@
 package com.sanam.yvp.datastructureplayground
 
+import java.util.*
+import kotlin.collections.HashMap
+
 fun dictionary() {
     val dictionary = CharTrieByHashtable()
     dictionary.insert("cat")
@@ -51,62 +54,41 @@ class CharTrie {
     }
 }
 
-// this implementation has a problem in object oriented design
 class CharTrieByHashtable {
-
     private val root = Node(' ')
 
-    class Node(val value: Char) {
-        val children = HashMap<Int, Node>()
+    private class Node(val value: Char) {
+        val children = HashMap<Char, Node>()
         var isEndOfTheWord = false
-        fun setEndOfTheWord(index: Int, word: String) {
-            if (index == word.length - 1) {
-                isEndOfTheWord = true
-            }
-        }
     }
-
 
     fun insert(word: String) {
         var current = root
-        word.forEachIndexed { i, value ->
-            val index = value.lowercaseChar() - 'a' + 1
-            if (current.children[index] == null) {
-                current.children[index] = Node(value)
+        word.lowercase(Locale.getDefault()).forEach { char ->
+            if (current.children[char] == null) {
+                current.children[char] = Node(char)
             }
-            current = current.children[index]!!
-            current.setEndOfTheWord(i, word)
+            current = current.children[char]!!
         }
+        current.isEndOfTheWord = true
     }
 
     fun contains(word: String?): Boolean {
-        var exist = false
         var current = root
-        word?.forEachIndexed { i, value ->
-            val index = value.lowercaseChar() - 'a' + 1
-            if (current.children.containsKey(index)) {
-                current = current.children[index]!!
-                if (i == word.length - 1) {
-                    exist = current.isEndOfTheWord
-                }
+        word?.lowercase(Locale.getDefault())?.forEach { char ->
+            if (current.children.containsKey(char)) {
+                current = current.children[char]!!
             } else {
                 return false
             }
         }
-        return exist
+        return current.isEndOfTheWord
     }
 
     //Visit the current Node.. recursively visit the left and right child
     //print all the word
     fun preOrderTraverse() {
         preOrderTraverse(root)
-    }
-
-    //Recursively visit the left and right child, only visit the current node after the left and right
-    //child have been visited
-    //delete a word at trie post
-    fun postOrderTraverse() {
-        postOrderTraverse(root)
     }
 
     private fun preOrderTraverse(root: Node) {
@@ -116,19 +98,19 @@ class CharTrieByHashtable {
         }
     }
 
-    private fun postOrderTraverse(root: Node) {
+    //Recursively visit the left and right child, only visit the current node after the left and right
+    //child have been visited
+    //delete a word at trie post
+    fun postOrderTraverse() {
+        postOrderTraverse(root)
+    }
+
+    private fun postOrderTraverse(root: Node): Node {
         root.children.values.forEach {
             postOrderTraverse(it)
         }
         println(root.value)
-    }
-
-    fun delete(word: String) {
-        if (!contains(word)) {
-            println("Word does not exist")
-        } else {
-
-        }
+        return root
     }
 }
 
