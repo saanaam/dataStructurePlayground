@@ -22,8 +22,6 @@ fun dictionary() {
 fun testTrieTraversal() {
     val dictionary = CharTrieByHashtable()
     dictionary.insert("care")
-    dictionary.insert("cat")
-    dictionary.insert("can")
     dictionary.preOrderTraverse()
     println()
     dictionary.postOrderTraverse()
@@ -31,8 +29,11 @@ fun testTrieTraversal() {
 
 fun testTrieRemove() {
     val dictionary = CharTrieByHashtable()
+    dictionary.insert("car")
     dictionary.insert("care")
-    dictionary.remove("care")
+    dictionary.remove("car")
+    println("contains car? ${dictionary.contains("car")}")
+    println("contains care? ${dictionary.contains("care")}")
 }
 
 //This solution is not optimized because by creating each Node we allocate an array with 26 size.
@@ -69,6 +70,10 @@ class CharTrieByHashtable {
 
         override fun toString(): String {
             return "value $value"
+        }
+
+        fun removeChild(char: Char) {
+            children.remove(char)
         }
     }
 
@@ -124,18 +129,22 @@ class CharTrieByHashtable {
     }
 
     fun remove(word: String) {
-        remove(root, word.lowercase(Locale.getDefault()), 0)
+        remove(root, word.lowercase(Locale.getDefault()))
     }
 
-    private fun remove(root: Node, word: String, index: Int) {
-        if (index == word.length){
-            println(root.value)
-            return
+    private fun remove(root: Node, word: String) {
+        var child = root
+        word.forEachIndexed { index, c ->
+            if (index == word.length) {
+                root.isEndOfTheWord = false
+            }
+            child = root.children[c] ?: return
+            remove(child, word)
         }
-        val char = word[index]
-        val child = root.children[char] ?: return
-        remove(child, word, index + 1)
-        println(root.value)
+        if (child.children.isEmpty() && !child.isEndOfTheWord) {
+            root.removeChild(child.value)
+        }
+
     }
 }
 
