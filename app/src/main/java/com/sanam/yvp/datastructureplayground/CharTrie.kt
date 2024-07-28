@@ -22,6 +22,10 @@ fun dictionary() {
 fun testTrieTraversal() {
     val dictionary = CharTrieByHashtable()
     dictionary.insert("care")
+    dictionary.insert("coat")
+    dictionary.insert("cat")
+    dictionary.insert("cool")
+    dictionary.insert("colla")
     dictionary.preOrderTraverse()
     println()
     dictionary.postOrderTraverse()
@@ -118,6 +122,8 @@ class CharTrieByHashtable {
         preOrderTraverse(root)
     }
 
+    //After printing the value of the current node, the method iterates through all the children of the current node.
+    // For each child node, it recursively calls itself.
     private fun preOrderTraverse(root: Node) {
         println(root.value)
         root.children.values.forEach {
